@@ -37,12 +37,14 @@ const Home: NextPage = () => {
   
   return (
     <>
+    <div className={styles.page}>
+      
       <div className={styles.container}>
         <div className={styles.iconContainer}>
           <Image
-            src="/cover.png"
-            height={300}
-            width={600}
+            src="/cover2.jpg"
+            height={400}
+            width={800}
             style={{
               objectFit: "fill",
             }}
@@ -59,6 +61,7 @@ const Home: NextPage = () => {
       Claim 1 Digital Hope
     </button>
     <p>{conditions?.claimedSupply}/{conditions?.totalAvailableSupply}</p>
+      </div>
       </div>
     </>
   );
