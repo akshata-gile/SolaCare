@@ -2,6 +2,7 @@ import type { NextPage } from "next";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
+import { useProgram, useClaimNFT, useClaimConditions, useProgramMetadata } from "@thirdweb-dev/react/solana";
 
 // Default styles that can be overridden by your app
 require("@solana/wallet-adapter-react-ui/styles.css");
@@ -13,52 +14,51 @@ const WalletMultiButtonDynamic = dynamic(
 );
 
 const Home: NextPage = () => {
-  // Here's how to get the thirdweb SDK instance
-  // const sdk = useSDK();
-  // Here's how to get a nft collection
-  // const { program } = useProgram(
-  //   your_nft_collection_address,
-  //   "nft-collection"
-  // );
 
+  const { program } = useProgram("74bH9jb2axxWCu9bEV3C5KRWvAAXRf8Zw2Ba6CvqJsQd", "nft-drop");
+  const { mutateAsync: claim, isLoading, error } = useClaimNFT(program);
+  const {data: conditions, isLoading: conditionsisLoading} = useClaimConditions(program);
+  const {data: metadata, isLoading: metadataIsLoading} = useProgramMetadata(program);
+  const buttonStyle: React.CSSProperties = {
+    backgroundColor: '#4CAF50',
+    border: 'none',
+    color: 'white',
+    padding: '10px 20px',
+    textAlign: 'center',
+    textDecoration: 'none',
+    display: 'inline-block',
+    fontSize: '16px',
+    cursor: 'pointer',
+    borderRadius: '4px',
+  };
+  const paragraphStyle: React.CSSProperties = {
+    width: 750,
+  };
+  
   return (
     <>
       <div className={styles.container}>
         <div className={styles.iconContainer}>
           <Image
-            src="/thirdweb.svg"
-            height={75}
-            width={115}
+            src="/cover.png"
+            height={300}
+            width={600}
             style={{
-              objectFit: "contain",
+              objectFit: "fill",
             }}
             alt="thirdweb"
           />
-          <Image
-            width={75}
-            height={75}
-            src="/sol.png"
-            className={styles.icon}
-            alt="sol"
-          />
         </div>
-        <h1 className={styles.h1}>Solana, meet thirdweb 👋</h1>
-        <p className={styles.explain}>
-          Explore what you can do with thirdweb&rsquo;s brand new{" "}
-          <b>
-            <a
-              href="https://portal.thirdweb.com/solana"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.lightPurple}
-            >
-              Solana SDK
-            </a>
-          </b>
-          .
-        </p>
+        <h1 className={styles.h1}>Digital Hope 🍀</h1>
+          <p style={paragraphStyle}> {metadata?.description}</p>
 
         <WalletMultiButtonDynamic />
+        <br></br>
+      
+    <button disabled={isLoading} onClick={() => claim({amount: 1})} style={buttonStyle}>
+      Claim 1 Digital Hope
+    </button>
+    <p>{conditions?.claimedSupply}/{conditions?.totalAvailableSupply}</p>
       </div>
     </>
   );
